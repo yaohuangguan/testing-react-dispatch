@@ -1,33 +1,59 @@
-const dispatcher = {
-  events: {},
-  onceEvents: {},
-  isOnce: false,
-  dispatch(event, data) {
-    if (this.isOnce && this.onceEvents[event]) {
-      this.onceEvents[event].forEach((callback) => callback(data));
-      delete this.onceEvents[event];
-    }
-    if (!this.events[event]) return;
-    this.events[event].forEach((callback) => callback(data));
-  },
-  subscribe(event, callback) {
-    if (!this.events[event]) this.events[event] = [];
-    if (Object.prototype.toString.call(callback) !== "[object Function]")
-      return;
-    this.events[event].push(callback);
-  },
-  once(event, callback) {
-    if (!this.onceEvents[event]) this.onceEvents[event] = [];
-    if (Object.prototype.toString.call(callback) !== "[object Function]")
-      return;
-    this.onceEvents[event].push(callback);
-    this.isOnce = true;
-  },
-  off(event) {
-    return event in this.events
-      ? delete this.events[event]
-      : delete this.onceEvents[event];
-  },
-};
-
+var dispatcher = (function () {
+  var events = new Map();
+  var onceEvents = new Map();
+  var isOnce = false;
+  var checkValidate = function (checkTarget, target) {
+      return Object.prototype.toString.call(checkTarget) === target;
+  };
+  var beforeSubscribe = function (processor, updater, isSubscribe) {
+      if (isSubscribe) {
+          if (!events.has(processor))
+              events.set(processor, []);
+          if (!checkValidate(updater, "[object Function]"))
+              return;
+          return events.get(processor).push(updater);
+      }
+      if (!onceEvents.has(processor))
+          onceEvents.set(processor, []);
+      if (!checkValidate(updater, "[object Function]"))
+          return;
+      onceEvents.get(processor).push(updater);
+  };
+  var dispatch = function (event, data) {
+      if (isOnce && onceEvents.has(event)) {
+          onceEvents.get(event).forEach(function (callback) { return callback(data); });
+          onceEvents["delete"](event);
+      }
+      // console.log('this.events[event]', this.events[event])
+      if (!events.has(event))
+          return;
+      events.get(event).forEach(function (callback) { return callback(data); });
+  };
+  var subscribe = function (event, callback) {
+      beforeSubscribe(event, callback, true);
+  };
+  var once = function (event, callback) {
+      beforeSubscribe(event, callback, false);
+      isOnce = true;
+  };
+  var off = function (event) {
+      if (checkValidate(event, "[object Array]")) {
+          return event.forEach(function (e) {
+              if (events.has(e)) {
+                  events["delete"](e);
+              }
+              else {
+                  onceEvents["delete"](e);
+              }
+          });
+      }
+      return events.has(event) ? events["delete"](event) : onceEvents["delete"](event);
+  };
+  return {
+      dispatch: dispatch,
+      subscribe: subscribe,
+      once: once,
+      off: off
+  };
+})();
 module.exports.dispatcher = dispatcher;

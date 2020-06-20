@@ -1,28 +1,25 @@
-import React from "react";
+import React, { useRef } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { dispatcher } from "react-dispatch";
-import Test from './test'
+import { getSeconds } from "./degree";
+import Component from "./Component";
+import BrotherComponent from "./BrotherComponent";
+
 function App() {
-  const onClick = () => {
-    console.log('dispatcher.events', dispatcher.events)
-    dispatcher.dispatch("ONLY_ONCE", 1);
-    dispatcher.dispatch("ALL_TIME", 1);
-  }
-  const unMount = () => {
-    dispatcher.off('ALL_TIME')
-  }
+  const logoRef = useRef(null);
+
+  const onSpeedChange = (count) => {
+    console.log('count', count)
+    logoRef.current.style.animation = `App-logo-spin infinite ${getSeconds(
+      count
+    )}s linear`;
+  };
   return (
     <div className="App">
       <header className="App-header">
-      <Test></Test>
-        <img src={logo} className="App-logo" alt="logo" />
-        <a className="App-link" rel="noopener noreferrer" onClick={onClick}>
-        React-dispatch
-        </a> 
-        {/* <a className="App-link" rel="noopener noreferrer" onClick={unMount}>
-          卸载
-        </a> */}
+        <img ref={logoRef} src={logo} className="App-logo" alt="logo" />
+        <BrotherComponent onSpeedChange={onSpeedChange} />
+        <Component />
       </header>
     </div>
   );

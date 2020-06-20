@@ -8569,10 +8569,10 @@ react-dev-utils@^10.2.1:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dispatch@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/react-dispatch/-/react-dispatch-1.0.4.tgz#1afa4990fd894d57deaca89cc0f65fa5a006ad9f"
-  integrity sha512-feaGFi9+u5AuiFLpyNYpbUfv4Svv3C6l5rDUGWs+wfAuOaIPfLm4Gj8vHCFkitiA+n+U4kyyHbvwH5cVX44wwQ==
+react-dispatch@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-dispatch/-/react-dispatch-1.1.3.tgz#50b6e0472f90dcc21975a04f2ac5de0f3b9fe45b"
+  integrity sha512-mUxwJThRScpIGr2yMbuZRPHWAMzDN+NVpKjtDsi0wiOCkgdH3EVSaAcDBb8ubJo8SzhlEHGmgXQpbOMw1bbwyg==
 
 react-dom@^16.13.1:
   version "16.13.1"
